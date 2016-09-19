@@ -14,13 +14,17 @@ public class Pin : MonoBehaviour {
 	}
     public bool IsStanding()
     {
-        float x = transform.eulerAngles.x;
-        float z = transform.eulerAngles.z;
-        if(x > fallenThreshold && x < 360 - fallenThreshold)
+        if(transform.position.y < -1)
         {
             return false;
         }
-        if (z > fallenThreshold && z < 360 - fallenThreshold)
+        float pitch = transform.eulerAngles.x;
+        float roll = transform.eulerAngles.z;
+        if(pitch > fallenThreshold && pitch < 360 - fallenThreshold)
+        {
+            return false;
+        }
+        if (roll > fallenThreshold && roll < 360 - fallenThreshold)
         {
             return false;
         }

@@ -4,11 +4,11 @@ using System.Collections;
 [RequireComponent(typeof(Ball))]
 public class DragLaunch : MonoBehaviour {
     private Ball ball;
-    private Vector3 startPos;
-    private float startTime;
+    private Vector3 positionOfDragStart;
+    private float timeOfDragStart;
     private bool ballIsMoving;
-    public float velocityScale = 2;
-    public float velocityCorrect = 2;
+    public float speedMultiplier = 2;
+    public float aimCorrection = 2;
 
 	// Use this for initialization
 	void Start () {
@@ -32,17 +32,17 @@ public class DragLaunch : MonoBehaviour {
 	public void DragStart()
     {
         //Capture time and position of start of drag
-        startTime = Time.time;
-        startPos = Input.mousePosition;
+        timeOfDragStart = Time.time;
+        positionOfDragStart = Input.mousePosition;
         //Debug.Log("DragStart: " + startPos + " at time " + startTime);
     }
 
     public void DragEnd()
     {
         //launch the ball
-        Vector3 v = Input.mousePosition - startPos;
+        Vector3 v = Input.mousePosition - positionOfDragStart;
 
-        Vector3 velocity = new Vector3(v.x/velocityCorrect,0,v.y*velocityScale)/(Time.time - startTime);
+        Vector3 velocity = new Vector3(v.x/aimCorrection,0,v.y*speedMultiplier)/(Time.time - timeOfDragStart);
         //Debug.Log("DragEnd: " + velocity);
 
         ball.Launch(velocity);
