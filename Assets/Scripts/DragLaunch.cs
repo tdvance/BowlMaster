@@ -6,25 +6,23 @@ public class DragLaunch : MonoBehaviour {
     private Ball ball;
     private Vector3 positionOfDragStart;
     private float timeOfDragStart;
-    private bool ballIsMoving;
     public float speedMultiplier = 2;
     public float aimCorrection = 2;
 
 	// Use this for initialization
 	void Start () {
         ball = GetComponent<Ball>();
-        ballIsMoving = false;
 	}
 
     public void MoveStart(float xNudge)
     {
         //Debug.Log("xNudge = " + xNudge);
-        if (!ballIsMoving)
+        if (ball.readyToPlay)
         {
             float x = ball.transform.position.x + xNudge;
             if (x < 105f / 2 && x > -105f / 2)
             {
-                ball.transform.Translate(Vector3.right * xNudge);
+                ball.transform.Translate(Vector3.right * xNudge, Space.World);
             }
         }
     }
@@ -46,6 +44,5 @@ public class DragLaunch : MonoBehaviour {
         //Debug.Log("DragEnd: " + velocity);
 
         ball.Launch(velocity);
-        ballIsMoving = true;
     }
 }

@@ -6,7 +6,9 @@ public class Ball : MonoBehaviour
     public float launchSpeed = 1000;
     private AudioSource audioSource;
     private Rigidbody rigidBody;
+    private Vector3 ballStartPosition;
 
+    public bool readyToPlay;
 
     // Use this for initialization
     void Start()
@@ -15,9 +17,10 @@ public class Ball : MonoBehaviour
         rigidBody.useGravity = false;
 
         audioSource = GetComponent<AudioSource>();
+        ballStartPosition = transform.position;
 
     }
-    
+
 
     public void Launch(Vector3 velocity)
     {
@@ -27,10 +30,24 @@ public class Ball : MonoBehaviour
         audioSource.loop = false;
         audioSource.playOnAwake = false;
         audioSource.Play();
+        readyToPlay = false;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(transform.position.y < 5)
+        {
+            FindObjectOfType<PinSetter>().RollComplete();
+        }
+    }
+
+    public void Reset()
+    {
+        transform.position = ballStartPosition;
+        rigidBody.useGravity = false;
+        rigidBody.velocity = Vector3.zero;
+        rigidBody.angularVelocity = Vector3.zero;
+        readyToPlay = true;
     }
 }
