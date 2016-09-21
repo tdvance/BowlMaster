@@ -13,6 +13,7 @@ public class PinSetter : MonoBehaviour
 
     public int lastStandingCount = -1; //-1 = no value
     public float maxSettleTime = 3f;
+    public float distanceToRaise = 40f;
 
     // Use this for initialization
     void Start()
@@ -59,6 +60,37 @@ public class PinSetter : MonoBehaviour
             pinsStandingTextBox.GetComponent<Text>().text = CountStanding().ToString();
             CheckStanding();
         }
+    }
+
+    public void RaisePins()
+    {
+        foreach (Pin aPin in FindObjectsOfType<Pin>())
+        {
+            if (aPin.IsStanding())
+            {
+                aPin.GetComponent<Rigidbody>().useGravity = false;
+                aPin.transform.Translate(Vector3.up * distanceToRaise);
+            }
+        }
+        
+    }
+
+    public void LowerPins()
+    {
+        foreach (Pin aPin in FindObjectsOfType<Pin>())
+        {
+            if (aPin.IsStanding())
+            {
+                aPin.transform.Translate(Vector3.down * distanceToRaise);
+                aPin.GetComponent<Rigidbody>().useGravity = true;
+            }
+        }
+    }
+
+    public void RenewPins()
+    {
+        //Makes new pins
+        Debug.Log("Making new pins");
     }
 
     void CheckStanding()
