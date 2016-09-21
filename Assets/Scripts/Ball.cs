@@ -3,7 +3,8 @@ using System.Collections;
 
 public class Ball : MonoBehaviour
 {
-    public float launchSpeed = 1000;
+    public float minLaunchSpeed = 700;
+    public float maxLaunchSpeed = 2000;
     private AudioSource audioSource;
     private Rigidbody rigidBody;
     private Vector3 ballStartPosition;
@@ -18,12 +19,23 @@ public class Ball : MonoBehaviour
 
         audioSource = GetComponent<AudioSource>();
         ballStartPosition = transform.position;
-
+        readyToPlay = true;
     }
 
 
     public void Launch(Vector3 velocity)
     {
+        float m = velocity.magnitude;
+        if(m < minLaunchSpeed)
+        {
+            velocity *= minLaunchSpeed / m;
+        }
+        else if (m > maxLaunchSpeed)
+        {
+            velocity *= maxLaunchSpeed / m;
+        }
+        Debug.Log("Velocity = " + velocity.magnitude);
+
         rigidBody.velocity = velocity;
         rigidBody.useGravity = true;
 

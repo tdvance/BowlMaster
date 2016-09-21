@@ -69,7 +69,10 @@ public class PinSetter : MonoBehaviour
             if (aPin.IsStanding())
             {
                 aPin.GetComponent<Rigidbody>().useGravity = false;
-                aPin.transform.Translate(Vector3.up * distanceToRaise);
+                aPin.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                aPin.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+                aPin.transform.rotation = Quaternion.identity;
+                aPin.transform.Translate(Vector3.up * distanceToRaise, Space.World);
             }
         }
         
@@ -81,8 +84,13 @@ public class PinSetter : MonoBehaviour
         {
             if (aPin.IsStanding())
             {
-                aPin.transform.Translate(Vector3.down * distanceToRaise);
+                aPin.transform.position -= new Vector3(0, aPin.transform.position.y, 0);
+                aPin.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                aPin.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                 aPin.GetComponent<Rigidbody>().useGravity = true;
+            }else
+            {
+                Destroy(aPin.gameObject);
             }
         }
     }
