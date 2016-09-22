@@ -9,11 +9,11 @@ public class PinSetter : MonoBehaviour
     private float lastChangeTime = 0;
 
     private Ball ball;
-    private Vector3 ballStartPosition;
 
-    public int lastStandingCount = -1; //-1 = no value
+    private int lastStandingCount = -1; //-1 = no value
     public float maxSettleTime = 3f;
     public float distanceToRaise = 40f;
+    public GameObject tenPinsPrefab;
 
     // Use this for initialization
     void Start()
@@ -34,7 +34,7 @@ public class PinSetter : MonoBehaviour
     {
         if (obj.gameObject.transform.parent.gameObject.GetComponent<Ball>())
         {
-            RollComplete();
+            RollComplete();//activate pinsetter when ball goes through
         }
     }
 
@@ -46,7 +46,7 @@ public class PinSetter : MonoBehaviour
 
     void OnTriggerExit(Collider obj)
     {
-        if (obj.gameObject.transform.parent.gameObject.GetComponent<Pin>())
+        if (obj.gameObject.transform.parent.gameObject.GetComponent<Pin>()) //disintegrate pins that try to escape
         {
             Destroy(obj.gameObject.transform.parent.gameObject);
         }
@@ -57,7 +57,7 @@ public class PinSetter : MonoBehaviour
     {
         if (ballEnteredBox)
         {
-            pinsStandingTextBox.GetComponent<Text>().text = CountStanding().ToString();
+            pinsStandingTextBox.GetComponent<Text>().text = CountStanding().ToString(); // update pin standing count
             CheckStanding();
         }
     }
@@ -66,7 +66,7 @@ public class PinSetter : MonoBehaviour
     {
         foreach (Pin aPin in FindObjectsOfType<Pin>())
         {
-            if (aPin.IsStanding())
+            if (aPin.IsStanding()) //if pin is still standing, pull it out of the way of the swiper
             {
                 aPin.GetComponent<Rigidbody>().useGravity = false;
                 aPin.GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -82,7 +82,7 @@ public class PinSetter : MonoBehaviour
     {
         foreach (Pin aPin in FindObjectsOfType<Pin>())
         {
-            if (aPin.IsStanding())
+            if (aPin.IsStanding()) //put pins back down for second ball roll
             {
                 aPin.transform.position -= new Vector3(0, aPin.transform.position.y, 0);
                 aPin.GetComponent<Rigidbody>().velocity = Vector3.zero;
@@ -90,15 +90,16 @@ public class PinSetter : MonoBehaviour
                 aPin.GetComponent<Rigidbody>().useGravity = true;
             }else
             {
-                Destroy(aPin.gameObject);
+                Destroy(aPin.gameObject); // in case swiper misses a pin, e.g. pin knocked out into the lane on wrong side of swiper
             }
         }
     }
 
     public void RenewPins()
     {
-        //Makes new pins
-        Debug.Log("Making new pins");
+        Instantiate(tenPinsPrefab);
+        pinsStandingTextBox.GetComponent<Text>().text = CountStanding().ToString(); //reset pin count
+        pinsStandingTextBox.GetComponent<Text>().color = Color.black;
     }
 
     void CheckStanding()
@@ -123,7 +124,7 @@ public class PinSetter : MonoBehaviour
         ballEnteredBox = false;
         lastStandingCount = -1;
         lastChangeTime = 0;
-        pinsStandingTextBox.GetComponent<Text>().color = Color.green;
+        pinsStandingTextBox.GetComponent<Text>().color = Color.green; //freeze pin count
         ball.Reset();
     }
 

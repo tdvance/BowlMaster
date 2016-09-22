@@ -3,8 +3,7 @@ using System.Collections;
 
 public class Ball : MonoBehaviour
 {
-    public float minLaunchSpeed = 700;
-    public float maxLaunchSpeed = 2000;
+    
     private AudioSource audioSource;
     private Rigidbody rigidBody;
     private Vector3 ballStartPosition;
@@ -25,16 +24,6 @@ public class Ball : MonoBehaviour
 
     public void Launch(Vector3 velocity)
     {
-        float m = velocity.magnitude;
-        if(m < minLaunchSpeed)
-        {
-            velocity *= minLaunchSpeed / m;
-        }
-        else if (m > maxLaunchSpeed)
-        {
-            velocity *= maxLaunchSpeed / m;
-        }
-        Debug.Log("Velocity = " + velocity.magnitude);
 
         rigidBody.velocity = velocity;
         rigidBody.useGravity = true;
@@ -48,7 +37,7 @@ public class Ball : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(transform.position.y < 5)
+        if(transform.position.y < 5)//if ball falls off lane, tell pinsetter to activate
         {
             FindObjectOfType<PinSetter>().RollComplete();
         }

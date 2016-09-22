@@ -15,7 +15,7 @@ public class CameraControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        //follow the ball with the camera
         Vector3 ballPosition = ball.transform.position + offsetFromBall;
         transform.position = new Vector3(
             Mathf.Clamp(ballPosition.x, -100f, 100f),

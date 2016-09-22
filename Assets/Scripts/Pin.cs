@@ -14,13 +14,13 @@ public class Pin : MonoBehaviour {
 	}
     public bool IsStanding()
     {
-        if(transform.position.y < -1)
+        if(transform.position.y < -1)// pin fell off
         {
             return false;
         }
         float pitch = transform.eulerAngles.x;
         float roll = transform.eulerAngles.z;
-        if(pitch > fallenThreshold && pitch < 360 - fallenThreshold)
+        if(pitch > fallenThreshold && pitch < 360 - fallenThreshold)//pin is not very vertical
         {
             return false;
         }
