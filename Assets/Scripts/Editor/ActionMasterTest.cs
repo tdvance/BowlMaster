@@ -268,7 +268,13 @@ public class ActionMasterTest {
         Assert.AreEqual(tidy, actionMaster.Bowl(5));
         Assert.AreEqual(endTurn, actionMaster.Bowl(1));
     }
-
+    [Test]
+    public void T12Zeroone() {
+        Assert.AreEqual(tidy, actionMaster.Bowl(0));
+        Assert.AreEqual(endTurn, actionMaster.Bowl(1));
+        Assert.AreEqual(tidy, actionMaster.Bowl(0));
+        Assert.AreEqual(endTurn, actionMaster.Bowl(1));
+    }
 
 }
 

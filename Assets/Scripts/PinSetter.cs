@@ -6,7 +6,7 @@ public class PinSetter : MonoBehaviour
 {
     private GameObject pinsStandingTextBox;
     
-    private bool ballEnteredBox;
+    private bool ballEnteredBox = false;
     private float lastChangeTime = 0;
 
     private Ball ball;
@@ -17,20 +17,25 @@ public class PinSetter : MonoBehaviour
     public float maxSettleTime = 3f;
     public float distanceToRaise = 40f;
     public GameObject tenPinsPrefab;
-    private ActionMaster actionMaster = new ActionMaster(true);
 
+    private ActionMaster actionMaster = new ActionMaster(true);
+    private int startNumStanding = 10;
+
+    private Animator animator;
 
     // Use this for initialization
     void Start()
     {
         pinsStandingTextBox = GameObject.Find("PinsStanding");
-        ballEnteredBox = false;
-
         ball = FindObjectOfType<Ball>();
+        animator = GetComponent<Animator>();
 
         if (!pinsStandingTextBox)
         {
             Debug.LogError("PinsStanding text box not found!");
+        }
+        if (!ball) {
+            Debug.LogError("Ball not found!");
         }
     }
 
@@ -98,13 +103,15 @@ public class PinSetter : MonoBehaviour
                 Destroy(aPin.gameObject); // in case swiper misses a pin, e.g. pin knocked out into the lane on wrong side of swiper
             }
         }
+        ball.readyToPlay = true;
     }
 
     public void RenewPins()
     {
         Instantiate(tenPinsPrefab);
-        pinsStandingTextBox.GetComponent<Text>().text = CountStanding().ToString(); //reset pin count
+        pinsStandingTextBox.GetComponent<Text>().text = "10"; //reset pin count
         pinsStandingTextBox.GetComponent<Text>().color = Color.black;
+        startNumStanding = 10;
     }
 
     void CheckStanding()
@@ -131,6 +138,20 @@ public class PinSetter : MonoBehaviour
         lastStandingCount = -1;
         lastChangeTime = 0;
         pinsStandingTextBox.GetComponent<Text>().color = Color.green; //freeze pin count
+        int numStanding = CountStanding();
+        int numFallen =  startNumStanding - numStanding;
+        startNumStanding = numStanding;
+        ActionMaster.Action action = actionMaster.Bowl(numFallen);
+        switch (action) {
+            case ActionMaster.Action.Tidy:
+                animator.SetTrigger("Tidy");
+                break;
+            case ActionMaster.Action.EndGame:
+            case ActionMaster.Action.EndTurn:
+            case ActionMaster.Action.Reset:
+                animator.SetTrigger("Reset");
+                break;
+        }
         ball.Reset();
     }
 

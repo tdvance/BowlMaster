@@ -49,6 +49,6 @@ public class Ball : MonoBehaviour
         rigidBody.useGravity = false;
         rigidBody.velocity = Vector3.zero;
         rigidBody.angularVelocity = Vector3.zero;
-        readyToPlay = true;
+        //readyToPlay = true;
     }
 }
