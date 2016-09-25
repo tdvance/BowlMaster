@@ -5,15 +5,20 @@ using System.Collections;
 public class PinSetter : MonoBehaviour
 {
     private GameObject pinsStandingTextBox;
+    
     private bool ballEnteredBox;
     private float lastChangeTime = 0;
 
     private Ball ball;
 
     private int lastStandingCount = -1; //-1 = no value
+
+
     public float maxSettleTime = 3f;
     public float distanceToRaise = 40f;
     public GameObject tenPinsPrefab;
+    private ActionMaster actionMaster = new ActionMaster(true);
+
 
     // Use this for initialization
     void Start()
@@ -106,6 +111,7 @@ public class PinSetter : MonoBehaviour
     {
         //update the lastStandingCount variable
         int currentStandingCount = CountStanding();
+
         if (currentStandingCount != lastStandingCount || /*defensive programming: */ lastChangeTime == 0)
         {
             lastStandingCount = currentStandingCount;

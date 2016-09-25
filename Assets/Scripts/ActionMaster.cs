@@ -12,9 +12,17 @@ public class ActionMaster {
 
     public int[] bowls = new int[21];
     private int bowl = 1;
+    private bool debug = false;
 
+
+    public ActionMaster(bool debug) {
+        this.debug = debug;
+    }
 
     public Action Bowl(int pins) {
+        if (debug) {
+            Debug.Log("Bowl " + pins);
+        }
         if (pins < 0 || pins > 10) {
             throw new UnityException("Argument 'pins' should be from 0 to 10, but was " + pins);
         }

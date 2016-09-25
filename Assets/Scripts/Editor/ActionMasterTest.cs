@@ -16,7 +16,7 @@ public class ActionMasterTest {
 
     [SetUp]
     public void SetUp() {
-        actionMaster = new ActionMaster();
+        actionMaster = new ActionMaster(false);
     }
 
     [Test]
