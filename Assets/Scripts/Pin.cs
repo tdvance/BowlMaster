@@ -2,10 +2,14 @@
 using System.Collections;
 
 public class Pin : MonoBehaviour {
+    private AudioSource audioSource;
+    private Ball ball;
+
     public float fallenThreshold = 10;
     // Use this for initialization
     void Start() {
-
+        audioSource = GetComponent<AudioSource>();
+        ball = FindObjectOfType<Ball>();
     }
 
     // Update is called once per frame
@@ -27,5 +31,11 @@ public class Pin : MonoBehaviour {
             return false;
         }
         return true;
+    }
+
+    void OnCollisionEnter(Collision obj) {
+        if (ball.transform.position.z>1000) {
+            audioSource.Play();
+        }
     }
 }

@@ -23,6 +23,8 @@ public class PinSetter : MonoBehaviour
 
     private Animator animator;
 
+    private static PinSetter instance;
+
     // Use this for initialization
     void Start()
     {
@@ -37,6 +39,8 @@ public class PinSetter : MonoBehaviour
         if (!ball) {
             Debug.LogError("Ball not found!");
         }
+
+        instance = this;
     }
 
 
@@ -169,5 +173,9 @@ public class PinSetter : MonoBehaviour
         }
 
         return howManyStanding;
+    }
+
+    public static void Strike() {
+        instance.GetComponent<AudioSource>().Play();
     }
 }

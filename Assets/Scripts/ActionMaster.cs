@@ -56,8 +56,9 @@ public class ActionMaster {
         if (pins == 10) {
             if (bowl % 2 == 0) {
                 bowl += 1;
-            } else {
+            } else { //strike
                 bowl += 2;
+                PinSetter.Strike();
             }
             return Action.EndTurn;
         }
