@@ -30,6 +30,9 @@ public class ScoreMaster  {
                     break;
                 case GameState.MiddleOfFrame:
                     frameList[index] += pins;
+                    if(frame < 10) {
+                        state = GameState.TopOfFrame;
+                    }
                     break;
                 case GameState.BonusRoll:
                     frameList[index] += pins;
