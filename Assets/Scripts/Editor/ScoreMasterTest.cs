@@ -212,4 +212,11 @@ public class ScoreMasterTest {
 		int[] totals = {30, 60, 89,108, 117,147,177,207,236,    256};
 		Assert.AreEqual (totals.ToList(), ScoreMaster.ScoreCumulative (rolls.ToList()));
 	}
+
+    [Test]
+    public void LarsTenRollSpare() {
+        int[] rolls = { 0, 10, 5 };
+        int[] frames = { 15 };
+        Assert.AreEqual(frames.ToList(), ScoreMaster.ScoreFrames(rolls.ToList()));
+    }
 }
