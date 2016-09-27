@@ -3,6 +3,7 @@ using UnityEditor;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 [TestFixture]
 public class ActionMasterTest {
@@ -11,269 +12,305 @@ public class ActionMasterTest {
     private ActionMaster.Action tidy = ActionMaster.Action.Tidy;
     private ActionMaster.Action reset = ActionMaster.Action.Reset;
     private ActionMaster.Action endGame = ActionMaster.Action.EndGame;
-
-    private ActionMaster actionMaster;
+    private List<int> pinFalls;
 
     [SetUp]
     public void SetUp() {
-        actionMaster = new ActionMaster(false);
+        pinFalls = new List<int>();
     }
 
     [Test]
     public void T01_OneStrikeReturnsEndTurn() {
         //strike on frame 1
-        Assert.AreEqual(endTurn, actionMaster.Bowl(10));
+        pinFalls.Add(10);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
     public void T02_BowlEightReturnsTidy() {
         //8 on top of frame 2
-        Assert.AreEqual(tidy, actionMaster.Bowl(8));
+        pinFalls.Add(8);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
     public void T03_BowlTwoReturnsEndTurn() { //spare on frame 2
-        Assert.AreEqual(tidy, actionMaster.Bowl(8));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(2));
+        pinFalls.Add(8);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(2);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
     public void T03a_YoutubeTest() {
-        Assert.AreEqual(tidy, actionMaster.Bowl(8));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(2));
+        pinFalls.Add(8);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(2);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
 
-        Assert.AreEqual(endTurn, actionMaster.Bowl(10));
+        pinFalls.Add(10);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
 
-        Assert.AreEqual(tidy, actionMaster.Bowl(3));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(4));
+        pinFalls.Add(3);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(4);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
 
-        Assert.AreEqual(endTurn, actionMaster.Bowl(10));
+        pinFalls.Add(10);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
 
-        Assert.AreEqual(tidy, actionMaster.Bowl(2));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(8));
+        pinFalls.Add(2);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(8);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
 
-        Assert.AreEqual(endTurn, actionMaster.Bowl(10));
+        pinFalls.Add(10);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
 
-        Assert.AreEqual(endTurn, actionMaster.Bowl(10));
+        pinFalls.Add(10);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
 
-        Assert.AreEqual(tidy, actionMaster.Bowl(8));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(0));
+        pinFalls.Add(8);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(0);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
 
-        Assert.AreEqual(endTurn, actionMaster.Bowl(10));
+        pinFalls.Add(10);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
 
-        Assert.AreEqual(tidy, actionMaster.Bowl(8));
-        Assert.AreEqual(reset, actionMaster.Bowl(2));
-        Assert.AreEqual(endGame, actionMaster.Bowl(10));
-
+        pinFalls.Add(8);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(2);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(endGame, ActionMaster.NextAction(pinFalls));
     }
 
 
     [Test]
     public void T04Bowl28SpareReturnsEndTurn() {
-        actionMaster.Bowl(8);
-        Assert.AreEqual(endTurn, actionMaster.Bowl(2));
+        pinFalls.Add(8);
+        pinFalls.Add(2);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
     public void T05CheckResetAtStrikeInLastFrame() {
-        int[] rolls = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
-        }
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
+        int[] rolls = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 10 };
+        Assert.AreEqual(reset, ActionMaster.NextAction(rolls.ToList()));
     }
 
     [Test]
     public void T06CheckResetAtSpareInLastFrame() {
-        int[] rolls = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
-        }
-        actionMaster.Bowl(1);
-        Assert.AreEqual(reset, actionMaster.Bowl(9));
+        int[] rolls = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9 };
+        Assert.AreEqual(reset, ActionMaster.NextAction(rolls.ToList()));
     }
 
     [Test]
     public void T07YouTubeRollsEndInEndGame() {
-        int[] rolls = { 8, 2, 7, 3, 3, 4, 10, 2, 8, 10, 10, 8, 0, 10, 8, 2 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
-        }
-        Assert.AreEqual(endGame, actionMaster.Bowl(9));
+        int[] rolls = { 8, 2, 7, 3, 3, 4, 10, 2, 8, 10, 10, 8, 0, 10, 8, 2, 9 };
+        Assert.AreEqual(endGame, ActionMaster.NextAction(rolls.ToList()));
     }
 
     [Test]
     public void T08GameEndsAtBowl20() {
-        int[] rolls = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
-        }
-        Assert.AreEqual(endGame, actionMaster.Bowl(1));
-    }
-
-    [Test]
-    public void T10Bowl20TidyAfterStrike() {
-        int[] rolls = { 8, 2, 7, 3, 3, 4, 10, 2, 8, 10, 10, 8, 0, 10, 10 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
-        }
-        Assert.AreEqual(tidy, actionMaster.Bowl(9));
+        int[] rolls = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+        Assert.AreEqual(endGame, ActionMaster.NextAction(rolls.ToList()));
     }
 
     [Test]
     public void T09ZeroThenTen() {
-        for (int i = 0; i < 9; i++) {
-            actionMaster.Bowl(0);
-            Assert.AreEqual(endTurn, actionMaster.Bowl(10));
-        }
+        int[] rolls = { 0, 10 };
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(rolls.ToList()));
     }
 
     [Test]
+    public void T10Bowl20TidyAfterStrike() {
+        int[] rolls = { 8, 2, 7, 3, 3, 4, 10, 2, 8, 10, 10, 8, 0, 10, 10, 9 };
+        Assert.AreEqual(tidy, ActionMaster.NextAction(rolls.ToList()));
+    }
+
+
+    [Test]
     public void T11Bowl20TidyAfterStrike2() {
-        int[] rolls = { 8, 2, 7, 3, 3, 4, 10, 2, 8, 10, 10, 8, 0, 10, 10 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
-        }
-        Assert.AreEqual(tidy, actionMaster.Bowl(0));
+        int[] rolls = { 8, 2, 7, 3, 3, 4, 10, 2, 8, 10, 10, 8, 0, 10, 10, 0 };
+        Assert.AreEqual(tidy, ActionMaster.NextAction(rolls.ToList()));
     }
 
     [Test]
     public void T12ZeroTenFiveOne() {
-        Assert.AreEqual(tidy, actionMaster.Bowl(0));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(10));
-        Assert.AreEqual(tidy, actionMaster.Bowl(5));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(1));
+        pinFalls.Add(0);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(5);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(1);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
     public void T13TenthFrameTurkey() {
-        int[] rolls = { 1, 1,  1, 1,  1, 1,  1, 1,  1, 1,  1, 1,  1, 1,  1, 1,  1, 1 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+        for (int i = 0; i < 18; i++) {
+            pinFalls.Add(1);
         }
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
-        Assert.AreEqual(endGame, actionMaster.Bowl(10));
-
+        pinFalls.Add(10);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(endGame, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
-    public void T1010thFrameStrikeOpenFrame() {
-        int[] rolls = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+    public void T14_10thFrameStrikeOpenFrame() {
+        for (int i = 0; i < 18; i++) {
+            pinFalls.Add(1);
         }
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
-        Assert.AreEqual(tidy, actionMaster.Bowl(0));
-        Assert.AreEqual(endGame, actionMaster.Bowl(10));
+        pinFalls.Add(10);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(0);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(endGame, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
-    public void T11PerfectGame() {
-        int[] rolls = { 10, 10, 10, 10, 10, 10, 10, 10, 10 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+    public void T15PerfectGame() {
+        for (int i = 0; i < 9; i++) {
+            pinFalls.Add(10);
         }
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
-        Assert.AreEqual(endGame, actionMaster.Bowl(10));
+        pinFalls.Add(10);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(endGame, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
-    public void T12GutterBallMania() {
-        int[] rolls = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+    public void T16GutterBallMania() {
+        for (int i = 0; i < 18; i++) {
+            pinFalls.Add(0);
         }
-        Assert.AreEqual(tidy, actionMaster.Bowl(0));
-        Assert.AreEqual(endGame, actionMaster.Bowl(0));
+        pinFalls.Add(0);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(0);
+        Assert.AreEqual(endGame, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
-    public void T13SpareStrikeInTenthFrame() {
-        int[] rolls = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+    public void T17SpareStrikeInTenthFrame() {
+        for (int i = 0; i < 18; i++) {
+            pinFalls.Add(0);
         }
-        Assert.AreEqual(tidy, actionMaster.Bowl(8));
-        Assert.AreEqual(reset, actionMaster.Bowl(2));
-        Assert.AreEqual(endGame, actionMaster.Bowl(10));
+
+        pinFalls.Add(8);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(2);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(endGame, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
-    public void T14TurkeyMidGame() {
-        int[] rolls = { 10, 10, 10, 10, 10 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+    public void T18TurkeyMidGame() {
+        for (int i = 0; i < 5; i++) {
+            pinFalls.Add(10);
         }
-        Assert.AreEqual(endTurn, actionMaster.Bowl(10));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(10));
+        pinFalls.Add(10);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
-    public void T15Open10th() {
-        int[] rolls = { 10, 10, 10, 10, 10, 10, 10, 10, 10 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+    public void T19Open10th() {
+        for (int i = 0; i < 9; i++) {
+            pinFalls.Add(10);
         }
-        Assert.AreEqual(tidy, actionMaster.Bowl(9));
-        Assert.AreEqual(endGame, actionMaster.Bowl(0));
+        pinFalls.Add(9);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(0);
+        Assert.AreEqual(endGame, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
-    public void T16SpareIn9th() {
-        int[] rolls = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+    public void T20SpareIn9th() {
+        for (int i = 0; i < 16; i++) {
+            pinFalls.Add(1);
         }
-        Assert.AreEqual(tidy, actionMaster.Bowl(9));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(1));
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
-        Assert.AreEqual(endGame, actionMaster.Bowl(10));
+
+        pinFalls.Add(9);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(1);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(endGame, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
-    public void T17LotsOfSpares() {
+    public void T21LotsOfSpares() {
         int[] rolls = { 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+        foreach(int i in rolls) {
+            pinFalls.Add(i);
         }
-        Assert.AreEqual(tidy, actionMaster.Bowl(9));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(1));
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
-        Assert.AreEqual(endGame, actionMaster.Bowl(10));
+        pinFalls.Add(9);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(1);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(endGame, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
-    public void T18StrikeSpareIn10th() {
+    public void T22StrikeSpareIn10th() {
         int[] rolls = { 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1, 9, 1 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+        foreach (int i in rolls) {
+            pinFalls.Add(i);
         }
-        Assert.AreEqual(reset, actionMaster.Bowl(10));
-        Assert.AreEqual(tidy, actionMaster.Bowl(7));
-        Assert.AreEqual(endGame, actionMaster.Bowl(3));
+        pinFalls.Add(10);
+        Assert.AreEqual(reset, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(7);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(3);
+        Assert.AreEqual(endGame, ActionMaster.NextAction(pinFalls));
     }
 
     [Test]
-    public void T19StrikeAsSpareMidGame() {
+    public void T23StrikeAsSpareMidGame() {
         int[] rolls = { 9, 1, 9, 1, 9, 1, 9, 1, 9, 1 };
-        foreach (int roll in rolls) {
-            actionMaster.Bowl(roll);
+        foreach (int i in rolls) {
+            pinFalls.Add(i);
         }
-        Assert.AreEqual(tidy, actionMaster.Bowl(0));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(10));
-        Assert.AreEqual(tidy, actionMaster.Bowl(5));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(1));
+        pinFalls.Add(0);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(10);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(5);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(1);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
     }
+
     [Test]
-    public void T12Zeroone() {
-        Assert.AreEqual(tidy, actionMaster.Bowl(0));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(1));
-        Assert.AreEqual(tidy, actionMaster.Bowl(0));
-        Assert.AreEqual(endTurn, actionMaster.Bowl(1));
+    public void T24Zeroone() {
+        pinFalls.Add(0);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(1);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(0);
+        Assert.AreEqual(tidy, ActionMaster.NextAction(pinFalls));
+        pinFalls.Add(1);
+        Assert.AreEqual(endTurn, ActionMaster.NextAction(pinFalls));
     }
 
 }

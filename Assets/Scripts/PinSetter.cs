@@ -176,6 +176,8 @@ public class PinSetter : MonoBehaviour
     }
 
     public static void Strike() {
-        instance.GetComponent<AudioSource>().Play();
+        if (instance) {
+            instance.GetComponent<AudioSource>().Play();
+        }//TODO remove need for instance
     }
 }

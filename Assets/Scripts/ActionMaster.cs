@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+
 
 public class ActionMaster {
 
@@ -14,11 +16,24 @@ public class ActionMaster {
     private int bowl = 1;
     private bool debug = false;
 
+    public static Action NextAction(List<int> pinFalls) {
+        ActionMaster temporaryInstance = new ActionMaster();
+        Action currentAction = Action.EndGame;
+        foreach(int numPins in pinFalls) {
+            currentAction = temporaryInstance.Bowl(numPins);
+        }
+        return currentAction;
+    }
+
+    public ActionMaster() {
+        this.debug = false;
+    }
 
     public ActionMaster(bool debug) {
         this.debug = debug;
     }
 
+    //TODO make private
     public Action Bowl(int pins) {
         if (debug) {
             Debug.Log("Bowl " + pins);
