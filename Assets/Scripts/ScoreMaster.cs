@@ -18,18 +18,30 @@ public class ScoreMaster  {
         GameState state = GameState.TopOfFrame;
         int frame = -1;
         int index = -1;
-        foreach(int pins in rolls) {
+        bool bonusForPrevious = false;
+        bool bonusForPrevious2 = false;
+
+        foreach(int pins in rolls) {           
             switch (state) {
                 case GameState.TopOfFrame:
                     frameList.Add(pins);
                     frame = frameList.Count;
                     index = frame - 1;
+                    if (bonusForPrevious2) {
+                        frameList[index - 1] += pins;
+                    }
                     if(pins < 10) {
                         state = GameState.MiddleOfFrame;
+                    }else {
+                        bonusForPrevious2 = true;
                     }
                     break;
                 case GameState.MiddleOfFrame:
                     frameList[index] += pins;
+                    if (bonusForPrevious || bonusForPrevious2) {
+                       frameList[index - 1] += pins;
+                        bonusForPrevious = false;
+                    }
                     if(frame < 10) {
                         state = GameState.TopOfFrame;
                     }
