@@ -16,11 +16,11 @@ public class ScoreMaster {
     // Returns a list of individual (non-cumulative) frame scores
     public static List<int> ScoreFrames(List<int> rolls) {
         int[] frames = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        int[] ballsNeeded = {1,1,1,1,1,1,1,1,1,1};
+        int[] ballsNeeded = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
         int frame = 1;
         bool startOfFrame = true;
         foreach (int pins in rolls) {
-            for(int i=0; i<=frame-1; i++) {
+            for (int i = 0; i < frame; i++) {
                 if (ballsNeeded[i] > 0) {
                     ballsNeeded[i]--;
                     frames[i] += pins;
@@ -29,11 +29,10 @@ public class ScoreMaster {
             if (startOfFrame && pins < 10) {
                 ballsNeeded[frame - 1]++;
                 startOfFrame = false;
-            }else {
-                if (pins == 10) { //strike
+            } else {
+                if (startOfFrame && pins == 10) { //strike
                     ballsNeeded[frame - 1] += 2;
-                }
-                if(frames[frame - 1] == 10) {//spare
+                }else if (frames[frame - 1] == 10) {//spare
                     ballsNeeded[frame - 1]++;
                 }
                 startOfFrame = true;
@@ -41,7 +40,7 @@ public class ScoreMaster {
             }
         }
         List<int> frameList = new List<int>();
-        for(int i=0; i<10; i++) {
+        for (int i = 0; i < 10; i++) {
             if (ballsNeeded[i] == 0) {
                 frameList.Add(frames[i]);
             }
