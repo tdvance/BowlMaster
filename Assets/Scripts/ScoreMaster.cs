@@ -43,7 +43,9 @@ public class ScoreMaster  {
                     throw new UnityException("Unhandled state " + state);
             }
         }       
-
+        if(state == GameState.MiddleOfFrame) {//special case: frame not done yet
+            frameList.RemoveAt(index);
+        }
         return frameList;
     }
 
