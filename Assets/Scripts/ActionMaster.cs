@@ -33,8 +33,7 @@ public class ActionMaster {
         this.debug = debug;
     }
 
-    //TODO make private
-    public Action Bowl(int pins) {
+    private Action Bowl(int pins) {
         if (debug) {
             Debug.Log("Bowl " + pins);
         }
@@ -73,7 +72,6 @@ public class ActionMaster {
                 bowl += 1;
             } else { //strike
                 bowl += 2;
-                PinSetter.Strike();
             }
             return Action.EndTurn;
         }
@@ -89,6 +87,5 @@ public class ActionMaster {
 
         throw new UnityException("No action returned");
     }
-
 
 }

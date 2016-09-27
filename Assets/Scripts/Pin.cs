@@ -38,4 +38,19 @@ public class Pin : MonoBehaviour {
             audioSource.Play();
         }
     }
+
+    public void Raise(float distance) {
+        GetComponent<Rigidbody>().useGravity = false;
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        transform.rotation = Quaternion.identity;
+        transform.Translate(Vector3.up * distance, Space.World);
+    }
+
+    public void Lower() {
+        transform.position -= new Vector3(0, transform.position.y, 0);
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        GetComponent<Rigidbody>().useGravity = true;
+    }
 }

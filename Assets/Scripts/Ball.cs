@@ -7,12 +7,14 @@ public class Ball : MonoBehaviour
     private AudioSource audioSource;
     private Rigidbody rigidBody;
     private Vector3 ballStartPosition;
+    private PinCounter pinCounter;
 
     public bool readyToPlay;
 
     // Use this for initialization
     void Start()
     {
+        pinCounter = FindObjectOfType<PinCounter>();
         rigidBody = GetComponent<Rigidbody>();
         rigidBody.useGravity = false;
 
@@ -39,7 +41,7 @@ public class Ball : MonoBehaviour
     {
         if(transform.position.y < 5)//if ball falls off lane, tell pinsetter to activate
         {
-            FindObjectOfType<PinSetter>().RollComplete();
+           pinCounter.BeginCounting();
         }
     }
 
