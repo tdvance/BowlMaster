@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
-public class ScoreMaster  {
+public class ScoreMaster {
 
     public enum GameState {
         TopOfFrame,
@@ -14,49 +15,30 @@ public class ScoreMaster  {
 
     // Returns a list of individual (non-cumulative) frame scores
     public static List<int> ScoreFrames(List<int> rolls) {
-        List<int> frameList = new List<int>();
-        GameState state = GameState.TopOfFrame;
-        int frame = -1;
-        int index = -1;
-        bool bonusForPrevious = false;
-        bool bonusForPrevious2 = false;
-
-        foreach(int pins in rolls) {           
-            switch (state) {
-                case GameState.TopOfFrame:
-                    frameList.Add(pins);
-                    frame = frameList.Count;
-                    index = frame - 1;
-                    if (bonusForPrevious2) {
-                        frameList[index - 1] += pins;
-                    }
-                    if(pins < 10) {
-                        state = GameState.MiddleOfFrame;
-                    }else {
-                        bonusForPrevious2 = true;
-                    }
-                    break;
-                case GameState.MiddleOfFrame:
-                    frameList[index] += pins;
-                    if (bonusForPrevious || bonusForPrevious2) {
-                       frameList[index - 1] += pins;
-                        bonusForPrevious = false;
-                    }
-                    if(frame < 10) {
-                        state = GameState.TopOfFrame;
-                    }
-                    break;
-                case GameState.BonusRoll:
-                    frameList[index] += pins;
-                    break;
-                case GameState.GameOver:
-                    throw new UnityException("Attempt to roll when game is over");
-                default:
-                    throw new UnityException("Unhandled state " + state);
+        int[] frames = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        int[] ballsNeeded = {1,1,1,1,1,1,1,1,1,1};
+        int frame = 1;
+        bool startOfFrame = true;
+        foreach (int pins in rolls) {
+            for(int i=0; i<=frame-1; i++) {
+                if (ballsNeeded[i] > 0) {
+                    ballsNeeded[i]--;
+                    frames[i] += pins;
+                }
             }
-        }       
-        if(state == GameState.MiddleOfFrame) {//special case: frame not done yet
-            frameList.RemoveAt(index);
+            if (startOfFrame && pins < 10) {
+                ballsNeeded[frame - 1]++;
+                startOfFrame = false;
+            }else {
+                startOfFrame = true;
+                frame++;
+            }
+        }
+        List<int> frameList = new List<int>();
+        for(int i=0; i<10; i++) {
+            if (ballsNeeded[i] == 0) {
+                frameList.Add(frames[i]);
+            }
         }
         return frameList;
     }
@@ -65,7 +47,7 @@ public class ScoreMaster  {
     public static List<int> ScoreCumulative(List<int> rolls) {
         int runningTotal = 0;
         List<int> cumulativeScores = new List<int>();
-        foreach(int frameScore in ScoreFrames(rolls)) {
+        foreach (int frameScore in ScoreFrames(rolls)) {
             runningTotal += frameScore;
             cumulativeScores.Add(runningTotal);
         }
