@@ -30,8 +30,11 @@ public class ScoreMaster {
                 ballsNeeded[frame - 1]++;
                 startOfFrame = false;
             }else {
-                if (pins == 10) {
+                if (pins == 10) { //strike
                     ballsNeeded[frame - 1] += 2;
+                }
+                if(frames[frame - 1] == 10) {//spare
+                    ballsNeeded[frame - 1]++;
                 }
                 startOfFrame = true;
                 frame++;
