@@ -17,7 +17,7 @@ public class ScoreDisplay : MonoBehaviour {
                 result += " ";
             }
             result += RollChar(roll, previousRoll);
-            if (previousRoll == -1 && roll < 10 && result.Length < 20) {
+            if (previousRoll == -1 && roll < 10) {
                 previousRoll = roll;
             } else {
                 previousRoll = -1;
