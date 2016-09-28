@@ -9,18 +9,14 @@ public class ScoreDisplay : MonoBehaviour {
     public Text[] bowls = new Text[21];
     public Text[] frameScores = new Text[10];
 
-	// Use this for initialization
-	void Start () {
-        Reset();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+    public static string FormatRolls(List<int> rolls) {
+        string result = "";
+
+        return result;
+    }
 
     public void Reset() {
-        for(int i=0; i<bowls.Length; i++) {
+        for (int i = 0; i < bowls.Length; i++) {
             bowls[i].text = " ";
         }
         for (int i = 0; i < frameScores.Length; i++) {
@@ -28,24 +24,38 @@ public class ScoreDisplay : MonoBehaviour {
         }
     }
 
-    public void FillRollCard(List<int> rolls) {
+    public void FillRolls(List<int> rolls) {
+        int i = 0;
+        foreach (char c in FormatRolls(rolls).ToCharArray()) {
+            bowls[i].text = c.ToString();
+            i++;
+        }
+    }
+
+    public void FillFrames(List<int> frames) {
+        for (int i = 0; i < frames.Count; i++) {
+            frameScores[i].text = frames[i].ToString();
+        }
+    }
+
+    public void FillRollCard_bad(List<int> rolls) {
         Reset();
         int rollNum = 0;
         int lastRoll = 0;
-        foreach(int roll in rolls){
+        foreach (int roll in rolls) {
             if (roll == 0) {
                 bowls[rollNum].text = "-";
                 rollNum++;
-            }else if (roll == 10 && (rollNum%2 == 0 || (lastRoll==10&&rollNum>=20))) {//strike
-                if(rollNum%2 == 0) {
+            } else if (roll == 10 && (rollNum % 2 == 0 || (lastRoll == 10 && rollNum >= 20))) {//strike
+                if (rollNum % 2 == 0) {
                     bowls[rollNum].text = "X";
                     if (rollNum < 20) {
                         rollNum += 2;
-                    }else {
+                    } else {
                         rollNum++;
                     }
                 }
-            }else {
+            } else {
                 if (rollNum % 2 == 1 && roll + lastRoll == 10) {//spare
                     bowls[rollNum].text = "/";
                 } else {
