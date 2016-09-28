@@ -13,7 +13,7 @@ public class ScoreDisplay : MonoBehaviour {
         string result = "";
         int previousRoll = -1;
         foreach (int roll in rolls) {
-            if (result.EndsWith("X")) {
+            if (result.EndsWith("X") && result.Length < 19) {
                 result += " ";
             }
             result += RollChar(roll, previousRoll);
