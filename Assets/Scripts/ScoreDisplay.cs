@@ -12,9 +12,9 @@ public class ScoreDisplay : MonoBehaviour {
     public static string FormatRolls(List<int> rolls) {
         string result = "";
         int previousRoll = -1;
-        foreach(int roll in rolls){
+        foreach (int roll in rolls) {
             result += RollChar(roll, previousRoll);
-            if (previousRoll == -1 && roll<10) {
+            if (previousRoll == -1 && roll < 10) {
                 previousRoll = roll;
             } else {
                 previousRoll = -1;
@@ -27,10 +27,10 @@ public class ScoreDisplay : MonoBehaviour {
         if (roll == 0) {
             return "-";
         }
-        if(roll == 10 && previousRoll<0) {
+        if (roll == 10 && previousRoll < 0) {
             return "X";
         }
-        if(previousRoll>=0 && previousRoll + roll == 10) {
+        if (previousRoll >= 0 && previousRoll + roll == 10) {
             return "/";
         }
         return roll.ToString();
