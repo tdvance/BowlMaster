@@ -13,6 +13,9 @@ public class ScoreDisplay : MonoBehaviour {
         string result = "";
         int previousRoll = -1;
         foreach (int roll in rolls) {
+            if (result.EndsWith("X")) {
+                result += " ";
+            }
             result += RollChar(roll, previousRoll);
             if (previousRoll == -1 && roll < 10) {
                 previousRoll = roll;
