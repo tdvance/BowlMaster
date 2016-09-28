@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ScoreMaster {
+public static class ScoreMaster {
 
     public enum GameState {
         TopOfFrame,
