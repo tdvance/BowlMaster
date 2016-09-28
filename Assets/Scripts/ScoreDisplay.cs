@@ -11,8 +11,20 @@ public class ScoreDisplay : MonoBehaviour {
 
     public static string FormatRolls(List<int> rolls) {
         string result = "";
-
+        foreach(int roll in rolls){
+            result += RollChar(roll);
+        }
         return result;
+    }
+
+    public static string RollChar(int roll) {
+        if (roll == 0) {
+            return "-";
+        }
+        if(roll == 10) {
+            return "/";
+        }
+        return roll.ToString();
     }
 
     public void Reset() {
