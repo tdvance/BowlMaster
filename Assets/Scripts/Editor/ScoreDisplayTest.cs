@@ -44,4 +44,13 @@ public class ScoreDisplayTest {
         string rollsString = "X X X X X X X X X XXX";
         Assert.AreEqual(rollsString, ScoreDisplay.FormatRolls(rolls.ToList()));
     }
+
+    // http://slocums.homestead.com/gamescore.html
+    [Test]
+    [Category("Verification")]
+    public void TG01Gold() {
+        int[] rolls = { 10, 7, 3, 9, 0, 10, 0, 8, 8, 2, 0, 6, 10, 10, 10, 8, 1 };
+        string rollsString = "X 7/9-X -88/-6X X X81";
+        Assert.AreEqual(rollsString, ScoreDisplay.FormatRolls(rolls.ToList()));
+    }
 }
