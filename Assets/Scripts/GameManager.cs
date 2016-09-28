@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour {
         pinSetter = FindObjectOfType<PinSetter>();
         ball = FindObjectOfType<Ball>();
         scoreDisplay = FindObjectOfType<ScoreDisplay>();
+        scoreDisplay.Reset();
     }
 
     // Update is called once per frame
@@ -32,7 +33,9 @@ public class GameManager : MonoBehaviour {
         pinSetter.PerformAction(nextAction);
 
         //scoreDisplay.FillRollCard(new int[] {0,1, 2,3, 4,5, 6,4, 10, 10, 0,10, 1,1, 1,1, 10, 10, 10 }.ToList());
-        scoreDisplay.FillRollCard(bowls);
+        scoreDisplay.Reset();
+        scoreDisplay.FillRolls(bowls);
+        scoreDisplay.FillFrames(ScoreMaster.ScoreCumulative(bowls));
 
         ball.Reset();
     }

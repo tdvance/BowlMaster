@@ -54,6 +54,13 @@ public class ScoreDisplayTest {
         Assert.AreEqual(rollsString, ScoreDisplay.FormatRolls(rolls.ToList()));
     }
 
+    [Test]
+    public void T05Gutter() {
+        int[] rolls = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        string rollsString = "----------"; // Remember the space
+        Assert.AreEqual(rollsString, ScoreDisplay.FormatRolls(rolls.ToList()));
+    }
+
     // additional tests from UDEMY course
 
     [Test]
@@ -76,8 +83,7 @@ public class ScoreDisplayTest {
         string rollsString = "-"; // Remember the space
         Assert.AreEqual(rollsString, ScoreDisplay.FormatRolls(rolls.ToList()));
     }
-
-
+    
 
     //http://guttertoglory.com/wp-content/uploads/2011/11/score-2011_11_28.png
     [Category("Verification")]
