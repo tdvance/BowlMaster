@@ -37,4 +37,11 @@ public class ScoreDisplayTest {
         string rollsString = "X X X";
         Assert.AreEqual(rollsString, ScoreDisplay.FormatRolls(rolls.ToList()));
     }
+
+    [Test]
+    public void T04Perfect() {
+        int[] rolls = { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 };
+        string rollsString = "X X X X X X X X X XXX";
+        Assert.AreEqual(rollsString, ScoreDisplay.FormatRolls(rolls.ToList()));
+    }
 }
