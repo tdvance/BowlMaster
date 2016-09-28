@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 
 public class GameManager : MonoBehaviour {
@@ -14,7 +15,7 @@ public class GameManager : MonoBehaviour {
 
 
     // Use this for initialization
-    void Start () {
+    void Start() {
         pinCounter = FindObjectOfType<PinCounter>();
         pinSetter = FindObjectOfType<PinSetter>();
         ball = FindObjectOfType<Ball>();
@@ -23,20 +24,85 @@ public class GameManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
-	
-	}
+    void Update() {
+
+    }
 
     public void Bowl(int pinFall) {
         bowls.Add(pinFall);
         ActionMaster.Action nextAction = ActionMaster.NextAction(bowls);
         pinSetter.PerformAction(nextAction);
+        if (nextAction != ActionMaster.Action.EndGame) {
 
-        //scoreDisplay.FillRollCard(new int[] {0,1, 2,3, 4,5, 6,4, 10, 10, 0,10, 1,1, 1,1, 10, 10, 10 }.ToList());
-        scoreDisplay.Reset();
-        scoreDisplay.FillRolls(bowls);
-        scoreDisplay.FillFrames(ScoreMaster.ScoreCumulative(bowls));
+            scoreDisplay.Reset();
+            string rollsString = scoreDisplay.FillRolls(bowls);
+            scoreDisplay.FillFrames(ScoreMaster.ScoreCumulative(bowls));
 
-        ball.Reset();
+            if (rollsString.EndsWith("X") || rollsString.EndsWith("X ")) {
+                Strike();
+            }
+
+            if (rollsString.EndsWith("/")) {
+                Spare();
+            }
+
+            if (IsTurkey(rollsString)) {
+                Turkey();
+            }
+
+            ball.Reset();
+        } else {
+            GameOver();
+        }
     }
+
+    private bool IsTurkey(string rollString) {
+        int count = 0;
+        for (int i = rollString.Length - 1; i >= 0; i--) {
+            if(rollString[i]==' ') {
+                continue;
+            }
+            if(rollString[i] == 'X') {
+                count++;
+            }else {
+                break;            }
+            if (count == 3) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void Split() {
+        Debug.Log("Split");
+    }
+
+    public void Gutter() {
+        Debug.Log("Gutter");
+    }
+
+
+    public void Turkey() {
+        Debug.Log("Turkey");
+    }
+
+
+    public void Strike() {
+        Debug.Log("Strike");
+    }
+
+    public void Spare() {
+        Debug.Log("Spare");
+    }
+
+
+    public void GameOver() {
+        Invoke("StartScreen", 5f);
+    }
+
+    public void StartScreen() {
+        SceneManager.LoadScene(0);
+    }
+
+
 }

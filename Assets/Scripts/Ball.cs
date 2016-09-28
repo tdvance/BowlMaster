@@ -1,9 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Ball : MonoBehaviour
-{
-    
+public class Ball : MonoBehaviour {
+
     private AudioSource audioSource;
     private Rigidbody rigidBody;
     private Vector3 ballStartPosition;
@@ -12,8 +11,20 @@ public class Ball : MonoBehaviour
     public bool readyToPlay;
 
     // Use this for initialization
-    void Start()
-    {
+    void Start() {
+        switch (StartScreen.BallSelected) {
+            case 0:
+                Debug.Log("Mars selected");
+                break;
+            case 1:
+                Debug.Log("Green Jupiter selected");
+                break;
+            case 2:
+                Debug.Log("White Jupiter selected");
+                break;
+            default:
+                throw new UnityException("Unrecognized ball choice: " + StartScreen.BallSelected);
+        }
         pinCounter = FindObjectOfType<PinCounter>();
         rigidBody = GetComponent<Rigidbody>();
         rigidBody.useGravity = false;
@@ -24,8 +35,7 @@ public class Ball : MonoBehaviour
     }
 
 
-    public void Launch(Vector3 velocity)
-    {
+    public void Launch(Vector3 velocity) {
 
         rigidBody.velocity = velocity;
         rigidBody.useGravity = true;
@@ -37,16 +47,14 @@ public class Ball : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        if(transform.position.y < 5)//if ball falls off lane, tell pinsetter to activate
+    void Update() {
+        if (transform.position.y < 5)//if ball falls off lane, tell pinsetter to activate
         {
-           pinCounter.BeginCounting();
+            pinCounter.BeginCounting();
         }
     }
 
-    public void Reset()
-    {
+    public void Reset() {
         transform.position = ballStartPosition;
         rigidBody.useGravity = false;
         rigidBody.velocity = Vector3.zero;

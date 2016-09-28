@@ -48,12 +48,14 @@ public class ScoreDisplay : MonoBehaviour {
         }
     }
 
-    public void FillRolls(List<int> rolls) {
+    public string FillRolls(List<int> rolls) {
         int i = 0;
-        foreach (char c in FormatRolls(rolls).ToCharArray()) {
+        string rollsString = FormatRolls(rolls);
+        foreach (char c in rollsString.ToCharArray()) {
             bowls[i].text = c.ToString();
             i++;
         }
+        return rollsString; 
     }
 
     public void FillFrames(List<int> frames) {
