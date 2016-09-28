@@ -17,7 +17,7 @@ public class ScoreDisplay : MonoBehaviour {
                 result += " ";
             }
             result += RollChar(roll, previousRoll);
-            if (previousRoll == -1 && roll < 10) {
+            if (previousRoll == -1 && roll < 10 && result.Length < 20) {
                 previousRoll = roll;
             } else {
                 previousRoll = -1;
@@ -59,40 +59,6 @@ public class ScoreDisplay : MonoBehaviour {
     public void FillFrames(List<int> frames) {
         for (int i = 0; i < frames.Count; i++) {
             frameScores[i].text = frames[i].ToString();
-        }
-    }
-
-    public void FillRollCard_bad(List<int> rolls) {
-        Reset();
-        int rollNum = 0;
-        int lastRoll = 0;
-        foreach (int roll in rolls) {
-            if (roll == 0) {
-                bowls[rollNum].text = "-";
-                rollNum++;
-            } else if (roll == 10 && (rollNum % 2 == 0 || (lastRoll == 10 && rollNum >= 20))) {//strike
-                if (rollNum % 2 == 0) {
-                    bowls[rollNum].text = "X";
-                    if (rollNum < 20) {
-                        rollNum += 2;
-                    } else {
-                        rollNum++;
-                    }
-                }
-            } else {
-                if (rollNum % 2 == 1 && roll + lastRoll == 10) {//spare
-                    bowls[rollNum].text = "/";
-                } else {
-                    bowls[rollNum].text = roll.ToString();
-                }
-                rollNum++;
-            }
-
-            lastRoll = roll;
-        }
-        while (rollNum < 21) {
-            bowls[rollNum].text = " ";
-            rollNum++;
         }
     }
 }
