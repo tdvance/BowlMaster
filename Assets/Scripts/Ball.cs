@@ -8,10 +8,16 @@ public class Ball : MonoBehaviour {
     private Vector3 ballStartPosition;
     private PinCounter pinCounter;
 
+    private MeshRenderer meshRenderer;
+    private Material material;
+
     public bool readyToPlay;
 
     // Use this for initialization
     void Start() {
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
+        material = meshRenderer.materials[StartScreen.BallSelected];
+        meshRenderer.materials = new Material[] { material };
         switch (StartScreen.BallSelected) {
             case 0:
                 Debug.Log("Mars selected");
